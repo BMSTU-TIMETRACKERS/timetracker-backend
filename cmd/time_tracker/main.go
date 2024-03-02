@@ -6,10 +6,13 @@ import (
 	"fmt"
 	"log"
 
-	configTimeTracker "github.com/BMSTU-TIMETRACKERS/timetracker-backend/config/time_tracker"
-	"github.com/BMSTU-TIMETRACKERS/timetracker-backend/config/time_tracker/flags"
 	"github.com/BurntSushi/toml"
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
+
+	configTimeTracker "github.com/BMSTU-TIMETRACKERS/timetracker-backend/config/time_tracker"
+	"github.com/BMSTU-TIMETRACKERS/timetracker-backend/config/time_tracker/flags"
+	_ "github.com/BMSTU-TIMETRACKERS/timetracker-backend/docs"
 )
 
 var (
@@ -74,6 +77,8 @@ func (tt TimeTracker) Run() error {
 	// } else {
 	// 	logger.Info("Success conect to redis")
 	// }
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	httpServer := tt.Server.Init(e)
 	server := configTimeTracker.Server{HttpServer: httpServer}
