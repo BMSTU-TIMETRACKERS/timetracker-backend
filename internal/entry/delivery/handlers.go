@@ -1,6 +1,7 @@
 package delivery
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -12,9 +13,9 @@ import (
 )
 
 type usecase interface {
-	CreateEntry(e usecaseDto.Entry) (int64, error)
-	GetUserEntries(userID int64) ([]usecaseDto.Entry, error)
-	GetUserEntriesForDay(userID int64, date time.Time) ([]usecaseDto.Entry, error)
+	CreateEntry(ctx context.Context, e usecaseDto.Entry) (int64, error)
+	GetUserEntries(ctx context.Context, userID int64) ([]usecaseDto.Entry, error)
+	GetUserEntriesForDay(ctx context.Context, userID int64, date time.Time) ([]usecaseDto.Entry, error)
 }
 
 type Delivery struct {
@@ -55,6 +56,8 @@ func NewDelivery(
 // @Failure 422 {object} echo.HTTPError "unprocessable entity"
 // @Router   /entries/create [post]
 func (d *Delivery) CreateEntry(c echo.Context) error {
+	ctx := context.Background()
+
 	var in CreateEntryIn
 	err := c.Bind(&in)
 
@@ -83,7 +86,7 @@ func (d *Delivery) CreateEntry(c echo.Context) error {
 	}
 
 	entry.UserID = userID
-	entryID, err := d.usecase.CreateEntry(entry)
+	entryID, err := d.usecase.CreateEntry(ctx, entry)
 	if err != nil {
 		c.Logger().Errorf("usecase: %v", err)
 		return handleUsecaseError(err)
@@ -106,6 +109,8 @@ func (d *Delivery) CreateEntry(c echo.Context) error {
 // @Failure 400 {object} echo.HTTPError "bad request"
 // @Router   /me/entries [get]
 func (d *Delivery) GetMyEntries(c echo.Context) error {
+	ctx := context.Background()
+
 	userID, ok := c.Get("user_id").(int64)
 	if !ok {
 		c.Logger().Error("can't parse context user_id")
@@ -121,7 +126,7 @@ func (d *Delivery) GetMyEntries(c echo.Context) error {
 	var err error
 
 	if day == "" {
-		entries, err = d.usecase.GetUserEntries(userID)
+		entries, err = d.usecase.GetUserEntries(ctx, userID)
 	} else {
 		date, err := time.Parse("2006-01-02", day)
 
@@ -133,7 +138,7 @@ func (d *Delivery) GetMyEntries(c echo.Context) error {
 			)
 		}
 
-		entries, err = d.usecase.GetUserEntriesForDay(userID, date)
+		entries, err = d.usecase.GetUserEntriesForDay(ctx, userID, date)
 	}
 
 	if err != nil {

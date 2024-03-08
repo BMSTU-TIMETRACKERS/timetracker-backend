@@ -11,4 +11,7 @@ type Entry struct {
 	Name      string
 	TimeStart time.Time
 	TimeEnd   time.Time
+
+	// Поля только для чтения.
+	ProjectName string
 }
