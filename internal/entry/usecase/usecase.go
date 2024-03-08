@@ -95,9 +95,11 @@ func (u *Usecase) enrichEntries(ctx context.Context, entries []Entry) error {
 		projectIdName[info.ID] = info.Name
 	}
 
-	for _, e := range entries {
-		e.ProjectName = projectIdName[e.ProjectID]
+	for id, _ := range entries {
+		entries[id].ProjectName = projectIdName[entries[id].ProjectID]
 	}
+
+	fmt.Println(entries)
 
 	return nil
 }

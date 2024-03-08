@@ -14,9 +14,10 @@ type CreateEntryOut struct {
 }
 
 type EntryOut struct {
-	ID        int64     `json:"id"`
-	ProjectID int64     `json:"project_id"`
-	Name      string    `json:"name"`
-	TimeStart time.Time `json:"time_start"`
-	TimeEnd   time.Time `json:"time_end"`
+	ID          int64     `json:"id"`
+	ProjectID   int64     `json:"project_id"`
+	ProjectName string    `json:"project_name"`
+	Name        string    `json:"name"`
+	TimeStart   time.Time `json:"time_start"`
+	TimeEnd     time.Time `json:"time_end"`
 }
