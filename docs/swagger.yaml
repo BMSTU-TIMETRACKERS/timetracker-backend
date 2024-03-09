@@ -1,52 +1,17 @@
 definitions:
-  delivery.CreateEntryIn:
-    properties:
-      name:
-        type: string
-      project_id:
-        type: integer
-      time_end:
-        type: string
-      time_start:
-        type: string
-    required:
-      - project_id
-      - time_end
-      - time_start
-    type: object
-  delivery.CreateEntryOut:
-    properties:
-      id:
-        type: integer
-    required:
-      - id
-    type: object
   delivery.CreateProjectIn:
     properties:
       name:
         type: string
     required:
-      - name
+    - name
     type: object
   delivery.CreateProjectOut:
     properties:
       id:
         type: integer
     required:
-      - id
-    type: object
-  delivery.EntryOut:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-      project_id:
-        type: integer
-      time_end:
-        type: string
-      time_start:
-        type: string
+    - id
     type: object
   delivery.ProjectOut:
     properties:
@@ -57,30 +22,67 @@ definitions:
     type: object
   echo.HTTPError:
     properties:
-      message: { }
+      message: {}
+    type: object
+  internal_entry_delivery.CreateEntryIn:
+    properties:
+      name:
+        type: string
+      project_id:
+        type: integer
+      time_end:
+        type: string
+      time_start:
+        type: string
+    required:
+    - project_id
+    - time_end
+    - time_start
+    type: object
+  internal_entry_delivery.CreateEntryOut:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  internal_entry_delivery.EntryOut:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      project_id:
+        type: integer
+      project_name:
+        type: string
+      time_end:
+        type: string
+      time_start:
+        type: string
     type: object
 info:
-  contact: { }
+  contact: {}
 paths:
   /entries/create:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Create entry.
       parameters:
-        - description: entry info
-          in: body
-          name: entry
-          required: true
-          schema:
-            $ref: '#/definitions/delivery.CreateEntryIn'
+      - description: entry info
+        in: body
+        name: entry
+        required: true
+        schema:
+          $ref: '#/definitions/internal_entry_delivery.CreateEntryIn'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: success create entry
           schema:
-            $ref: '#/definitions/delivery.CreateEntryOut'
+            $ref: '#/definitions/internal_entry_delivery.CreateEntryOut'
         "400":
           description: bad request
           schema:
@@ -99,25 +101,25 @@ paths:
             $ref: '#/definitions/echo.HTTPError'
       summary: Create entry.
       tags:
-        - entries
+      - entries
   /me/entries:
     get:
       consumes:
-        - application/json
+      - application/json
       description: Get my entries or get my entries for a day
       parameters:
-        - description: day for events in YYYY-MM-DD format
-          in: query
-          name: day
-          type: string
+      - description: day for events in YYYY-MM-DD format
+        in: query
+        name: day
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: success create entry
           schema:
             items:
-              $ref: '#/definitions/delivery.EntryOut'
+              $ref: '#/definitions/internal_entry_delivery.EntryOut'
             type: array
         "400":
           description: bad request
@@ -129,14 +131,14 @@ paths:
             $ref: '#/definitions/echo.HTTPError'
       summary: Get my entries.
       tags:
-        - entries
+      - entries
   /me/projects:
     get:
       consumes:
-        - application/json
+      - application/json
       description: Get my projects or get my projects for a day
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: success create project
@@ -154,21 +156,21 @@ paths:
             $ref: '#/definitions/echo.HTTPError'
       summary: Get my projects.
       tags:
-        - projects
+      - projects
   /projects/create:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Create project.
       parameters:
-        - description: project info
-          in: body
-          name: project
-          required: true
-          schema:
-            $ref: '#/definitions/delivery.CreateProjectIn'
+      - description: project info
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/delivery.CreateProjectIn'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: success create project
@@ -188,5 +190,5 @@ paths:
             $ref: '#/definitions/echo.HTTPError'
       summary: Create project.
       tags:
-        - projects
+      - projects
 swagger: "2.0"

@@ -1,3 +1,4 @@
+.PHONY:docs build start clean up
 # Локальная разработка.
 build:
 	go build ./cmd/time_tracker/main.go
@@ -7,7 +8,8 @@ clean:
 	rm -rf ./main
 
 # Докер
-
+up:
+	docker compose up -d
 
 # Генерирует документацию
 docs:

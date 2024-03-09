@@ -2,10 +2,10 @@ package flags
 
 import (
 	"context"
+	"fmt"
 	"time"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
 )
 
 type PostgresFlags struct {
@@ -14,18 +14,14 @@ type PostgresFlags struct {
 	ConnectionLifetime time.Duration `toml:"conn-lifetime"`
 }
 
-func (f PostgresFlags) Init(_ context.Context) (*gorm.DB, error) {
-	cfg := postgres.Config{DSN: f.ConnectionDSN}
-	db, err := gorm.Open(postgres.New(cfg),
-		&gorm.Config{})
-
+func (f PostgresFlags) Init(_ context.Context) (*sqlx.DB, error) {
+	db, err := sqlx.Connect("postgres", f.ConnectionDSN)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("sqlx connect: %v", err)
 	}
 
-	sqlDB, _ := db.DB()
-	sqlDB.SetMaxIdleConns(f.MaxOpenConnections)
-	sqlDB.SetConnMaxLifetime(f.ConnectionLifetime)
+	db.SetMaxIdleConns(f.MaxOpenConnections)
+	db.SetConnMaxLifetime(f.ConnectionLifetime)
 
 	return db, nil
 }
