@@ -17,6 +17,9 @@ import (
 	entryRepo "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/entry/repository"
 	entryUC "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/entry/usecase"
 	"github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/middleware"
+	projectDelivery "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/delivery"
+	projectRepo "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/repository"
+	projectUC "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/usecase"
 )
 
 var (
@@ -83,9 +86,11 @@ func (tt TimeTracker) Run() error {
 
 	// Репозитории.
 	entryRepository := entryRepo.NewRepository(postgresClient)
+	projectRepository := projectRepo.NewRepository(postgresClient)
 
 	// Usecases.
 	entryUsecase := entryUC.NewUsecase(entryRepository)
+	projectUsecase := projectUC.NewUsecase(projectRepository)
 
 	// Мидлвары.
 	authMW := middleware.NewAuthMiddleware()
@@ -95,6 +100,7 @@ func (tt TimeTracker) Run() error {
 
 	// Регистрация обработчиков.
 	entryDelivery.RegisterHandlers(e, entryUsecase, logger)
+	projectDelivery.RegisterHandlers(e, projectUsecase, logger)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
