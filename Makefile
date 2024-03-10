@@ -10,6 +10,8 @@ clean:
 # Докер
 up:
 	docker compose up -d
+down:
+	docker compose down
 
 # Генерирует документацию
 docs:

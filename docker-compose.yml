@@ -13,6 +13,16 @@ services:
       POSTGRES_PASSWORD: test
     networks:
       - mynetwork
+  service:
+    build: .
+    container_name: service
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
 
 networks:
   mynetwork:
