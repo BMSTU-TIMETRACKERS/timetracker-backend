@@ -4,11 +4,8 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'README.md' # Пропустить запуск на пуш изменений только в README, можно убрать если не нужно
   pull_request:
-    branches:
-      - main
+    types: [closed]
 
 jobs:
   build:
@@ -23,6 +20,7 @@ jobs:
 
 
   test:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +37,8 @@ jobs:
             go test -v ./internal/...
 
   deploy:
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     steps:
