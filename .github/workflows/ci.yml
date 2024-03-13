@@ -51,11 +51,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo bash
-            pwd
-            ls
             cd timetracker-backend/
-            echo $USER
-            git pull
+            sudo git pull
             sudo docker-compose build --no-cache
       - name: up project
         uses: appleboy/ssh-action@master
