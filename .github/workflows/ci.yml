@@ -47,6 +47,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            sudo bash
             cd timetracker-backend
             git pull
             docker-compose build --no-cache
@@ -57,5 +58,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            sudo bash
             cd timetracker-backend
             docker-compose up -d
