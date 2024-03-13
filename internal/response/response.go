@@ -6,7 +6,3 @@ var ErrorMsgsByCode = map[int]string{
 	422: "unprocessable entity",
 	400: "bad request",
 }
-
-type Response struct {
-	Body interface{} `json:"body"`
-}

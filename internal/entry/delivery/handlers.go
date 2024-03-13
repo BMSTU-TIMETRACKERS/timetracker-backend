@@ -2,6 +2,8 @@ package delivery
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -24,7 +26,7 @@ type Delivery struct {
 	logger echo.Logger
 }
 
-func NewDelivery(
+func RegisterHandlers(
 	e *echo.Echo,
 	usecase usecase,
 	logger echo.Logger,
@@ -94,7 +96,7 @@ func (d *Delivery) CreateEntry(c echo.Context) error {
 
 	out := CreateEntryOut{ID: entryID}
 
-	return c.JSON(http.StatusOK, response.Response{Body: out})
+	return c.JSON(http.StatusOK, out)
 }
 
 // GetMyEntries godoc
@@ -148,34 +150,34 @@ func (d *Delivery) GetMyEntries(c echo.Context) error {
 
 	out := convertFromUsecaseEntries(entries)
 
-	return c.JSON(http.StatusOK, response.Response{Body: out})
+	return c.JSON(http.StatusOK, out)
 }
 
 func handleUsecaseError(err error) *echo.HTTPError {
-	// TODO во время юзкейсов
-	// causeErr := errors.Cause(err)
-	// switch {
-	// case errors.Is(causeErr, models.ErrNotFound):
-	// 	return echo.NewHTTPError(http.StatusNotFound, models.ErrNotFound.Error())
-	// case errors.Is(causeErr, models.ErrBadRequest):
-	// 	return echo.NewHTTPError(http.StatusBadRequest, models.ErrBadRequest.Error())
-	// case errors.Is(causeErr, models.ErrPermissionDenied):
-	// 	return echo.NewHTTPError(http.StatusForbidden, models.ErrPermissionDenied.Error())
-	// default:
-	// 	return echo.NewHTTPError(http.StatusInternalServerError, causeErr.Error())
-	// }
-	return nil
+	// Не нашли запись времени.
+	if errors.Is(err, usecaseDto.ErrEntryNotFound) {
+		return echo.NewHTTPError(
+			http.StatusNotFound,
+			fmt.Sprintf("%s: %s", response.ErrorMsgsByCode[http.StatusNotFound], "entry"))
+	}
+
+	// По дефолту пятисотим.
+	return echo.NewHTTPError(
+		http.StatusInternalServerError,
+		response.ErrorMsgsByCode[http.StatusInternalServerError],
+	)
 }
 
 func convertFromUsecaseEntries(entries []usecaseDto.Entry) []EntryOut {
 	out := make([]EntryOut, 0, len(entries))
 	for _, entry := range entries {
 		e := EntryOut{
-			ID:        entry.ID,
-			ProjectID: entry.ProjectID,
-			Name:      entry.Name,
-			TimeStart: entry.TimeStart,
-			TimeEnd:   entry.TimeEnd,
+			ID:          entry.ID,
+			ProjectID:   entry.ProjectID,
+			ProjectName: entry.ProjectName,
+			Name:        entry.Name,
+			TimeStart:   entry.TimeStart,
+			TimeEnd:     entry.TimeEnd,
 		}
 
 		out = append(out, e)

@@ -25,3 +25,6 @@ CREATE TABLE IF NOT EXISTS entries
     time_start TIMESTAMP NOT NULL,
     time_end   TIMESTAMP NOT NULL
 );
+
+insert into users (name, email, password)
+values ('test', 'test', 'password');

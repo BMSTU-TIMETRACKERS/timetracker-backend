@@ -7,11 +7,20 @@ services:
       - "13000:5432"
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
-      - ./dev/log:/var/log/
     environment:
       POSTGRES_USER: user
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: test
+    networks:
+      - mynetwork
+  service:
+    build: .
+    container_name: service
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
     networks:
       - mynetwork
 

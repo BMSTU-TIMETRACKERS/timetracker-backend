@@ -1,6 +1,9 @@
 package delivery
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -11,8 +14,8 @@ import (
 )
 
 type usecase interface {
-	CreateProject(e usecaseDto.Project) (int64, error)
-	GetUserProjects(userID int64) ([]usecaseDto.Project, error)
+	CreateProject(ctx context.Context, project usecaseDto.Project) (int64, error)
+	GetUserProjects(ctx context.Context, userID int64) ([]usecaseDto.Project, error)
 }
 
 type Delivery struct {
@@ -21,7 +24,7 @@ type Delivery struct {
 	logger echo.Logger
 }
 
-func NewDelivery(
+func RegisterHandlers(
 	e *echo.Echo,
 	usecase usecase,
 	logger echo.Logger,
@@ -34,9 +37,6 @@ func NewDelivery(
 
 	e.POST("/projects/create", handler.CreateProject)
 	e.GET("/me/projects", handler.GetMyProjects)
-	// e.POST("/projects/edit", handler.UpdateEntry)
-	// e.GET("/projects/:id", handler.GetEntry)
-	// e.DELETE("/projects/:id", handler.DeleteEntry)
 }
 
 // CreateProject godoc
@@ -52,6 +52,8 @@ func NewDelivery(
 // @Failure 422 {object} echo.HTTPError "unprocessable entity"
 // @Router   /projects/create [post]
 func (d *Delivery) CreateProject(c echo.Context) error {
+	ctx := context.Background()
+
 	var in CreateProjectIn
 	err := c.Bind(&in)
 
@@ -76,7 +78,7 @@ func (d *Delivery) CreateProject(c echo.Context) error {
 	}
 
 	project.UserID = userID
-	projectID, err := d.usecase.CreateProject(project)
+	projectID, err := d.usecase.CreateProject(ctx, project)
 	if err != nil {
 		c.Logger().Errorf("usecase: %v", err)
 		return handleUsecaseError(err)
@@ -84,7 +86,7 @@ func (d *Delivery) CreateProject(c echo.Context) error {
 
 	out := CreateProjectOut{ID: projectID}
 
-	return c.JSON(http.StatusOK, response.Response{Body: out})
+	return c.JSON(http.StatusOK, out)
 }
 
 // GetMyProjects godoc
@@ -98,6 +100,8 @@ func (d *Delivery) CreateProject(c echo.Context) error {
 // @Failure 400 {object} echo.HTTPError "bad request"
 // @Router   /me/projects [get]
 func (d *Delivery) GetMyProjects(c echo.Context) error {
+	ctx := context.Background()
+
 	userID, ok := c.Get("user_id").(int64)
 	if !ok {
 		c.Logger().Error("can't parse context user_id")
@@ -110,7 +114,7 @@ func (d *Delivery) GetMyProjects(c echo.Context) error {
 	var projects []usecaseDto.Project
 	var err error
 
-	projects, err = d.usecase.GetUserProjects(userID)
+	projects, err = d.usecase.GetUserProjects(ctx, userID)
 
 	if err != nil {
 		c.Logger().Errorf("usecase: %v", err)
@@ -119,23 +123,22 @@ func (d *Delivery) GetMyProjects(c echo.Context) error {
 
 	out := convertFromUsecaseProjects(projects)
 
-	return c.JSON(http.StatusOK, response.Response{Body: out})
+	return c.JSON(http.StatusOK, out)
 }
 
 func handleUsecaseError(err error) *echo.HTTPError {
-	// TODO во время юзкейсов
-	// causeErr := errors.Cause(err)
-	// switch {
-	// case errors.Is(causeErr, models.ErrNotFound):
-	// 	return echo.NewHTTPError(http.StatusNotFound, models.ErrNotFound.Error())
-	// case errors.Is(causeErr, models.ErrBadRequest):
-	// 	return echo.NewHTTPError(http.StatusBadRequest, models.ErrBadRequest.Error())
-	// case errors.Is(causeErr, models.ErrPermissionDenied):
-	// 	return echo.NewHTTPError(http.StatusForbidden, models.ErrPermissionDenied.Error())
-	// default:
-	// 	return echo.NewHTTPError(http.StatusInternalServerError, causeErr.Error())
-	// }
-	return nil
+	// Не нашли запись времени.
+	if errors.Is(err, usecaseDto.ErrProjectNotFound) {
+		return echo.NewHTTPError(
+			http.StatusNotFound,
+			fmt.Sprintf("%s: %s", response.ErrorMsgsByCode[http.StatusNotFound], "project"))
+	}
+
+	// По дефолту пятисотим.
+	return echo.NewHTTPError(
+		http.StatusInternalServerError,
+		response.ErrorMsgsByCode[http.StatusInternalServerError],
+	)
 }
 
 func convertFromUsecaseProjects(projects []usecaseDto.Project) []ProjectOut {

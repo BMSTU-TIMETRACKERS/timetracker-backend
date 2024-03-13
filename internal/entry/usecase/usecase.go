@@ -44,7 +44,7 @@ func (u *Usecase) GetUserEntries(ctx context.Context, userID int64) ([]Entry, er
 	repoEntries, err := u.repository.GetUserEntries(ctx, userID)
 	if err != nil {
 		if errors.Is(err, repo.ErrEntryNotFound) {
-			return nil, fmt.Errorf("repo get user entries: %w", ErrEntryNotFound)
+			return []Entry{}, nil
 		}
 		return nil, fmt.Errorf("repo get user entries: %v", err)
 	}
@@ -64,7 +64,7 @@ func (u *Usecase) GetUserEntriesForDay(ctx context.Context, userID int64, date t
 	repoEntries, err := u.repository.GetUserEntriesForInterval(ctx, userID, startDay, endDay)
 	if err != nil {
 		if errors.Is(err, repo.ErrEntryNotFound) {
-			return nil, fmt.Errorf("repo get user entries for day: %w", ErrEntryNotFound)
+			return []Entry{}, nil
 		}
 		return nil, fmt.Errorf("repo get user entries for day: %v", err)
 	}
@@ -95,9 +95,11 @@ func (u *Usecase) enrichEntries(ctx context.Context, entries []Entry) error {
 		projectIdName[info.ID] = info.Name
 	}
 
-	for _, e := range entries {
-		e.ProjectName = projectIdName[e.ProjectID]
+	for id, _ := range entries {
+		entries[id].ProjectName = projectIdName[entries[id].ProjectID]
 	}
+
+	fmt.Println(entries)
 
 	return nil
 }

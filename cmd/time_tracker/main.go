@@ -13,6 +13,13 @@ import (
 	configTimeTracker "github.com/BMSTU-TIMETRACKERS/timetracker-backend/config/time_tracker"
 	"github.com/BMSTU-TIMETRACKERS/timetracker-backend/config/time_tracker/flags"
 	_ "github.com/BMSTU-TIMETRACKERS/timetracker-backend/docs"
+	entryDelivery "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/entry/delivery"
+	entryRepo "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/entry/repository"
+	entryUC "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/entry/usecase"
+	"github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/middleware"
+	projectDelivery "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/delivery"
+	projectRepo "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/repository"
+	projectUC "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/usecase"
 )
 
 var (
@@ -48,7 +55,7 @@ func main() {
 }
 
 func (tt TimeTracker) Run() error {
-	/*ctx*/ _ = context.Background()
+	ctx := context.Background()
 
 	e := echo.New()
 	services, err := tt.Init(e)
@@ -60,14 +67,13 @@ func (tt TimeTracker) Run() error {
 		return fmt.Errorf("can not init services: %v", err)
 	}
 
-	// postgresClient, err := tt.PostgresClient.Init()
-
-	// if err != nil {
-	// 	logger.Error("can not connect to Postgres client: %w", err)
-	// 	return err
-	// } else {
-	// 	logger.Info("Success conect to postgres")
-	// }
+	postgresClient, err := tt.PostgresClient.Init(ctx)
+	if err != nil {
+		logger.Error("can not connect to Postgres client: %w", err)
+		return err
+	} else {
+		logger.Info("Success connect to postgres")
+	}
 
 	// redisSessionClient, err := tt.RedisSessionClient.Init()
 
@@ -77,6 +83,24 @@ func (tt TimeTracker) Run() error {
 	// } else {
 	// 	logger.Info("Success conect to redis")
 	// }
+
+	// Репозитории.
+	entryRepository := entryRepo.NewRepository(postgresClient)
+	projectRepository := projectRepo.NewRepository(postgresClient)
+
+	// Usecases.
+	entryUsecase := entryUC.NewUsecase(entryRepository)
+	projectUsecase := projectUC.NewUsecase(projectRepository)
+
+	// Мидлвары.
+	authMW := middleware.NewAuthMiddleware()
+
+	// Регистрация мидлвар.
+	e.Use(authMW.Auth)
+
+	// Регистрация обработчиков.
+	entryDelivery.RegisterHandlers(e, entryUsecase, logger)
+	projectDelivery.RegisterHandlers(e, projectUsecase, logger)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
