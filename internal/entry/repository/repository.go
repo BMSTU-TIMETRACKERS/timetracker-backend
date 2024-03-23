@@ -156,6 +156,113 @@ func (r *Repository) GetUserEntriesForInterval(
 	return entries, nil
 }
 
+func (r *Repository) GetProjectEntries(
+	_ context.Context,
+	userID int64,
+	projectID int64,
+) ([]Entry, error) {
+	rows, err := r.db.Query(
+		`SELECT 
+			id,
+			user_id,
+			project_id,
+			name,
+			time_start,
+			time_end
+		FROM entries
+		WHERE user_id = $1 AND project_id = $2`,
+		userID, projectID)
+
+	if err != nil {
+		return nil, fmt.Errorf("query: %w", err)
+	}
+
+	defer func() {
+		_ = rows.Close()
+	}()
+
+	var entries []Entry
+	for rows.Next() {
+		var entry Entry
+		if err = rows.Scan(
+			&entry.ID,
+			&entry.UserID,
+			&entry.ProjectID,
+			&entry.Name,
+			&entry.TimeStart,
+			&entry.TimeEnd,
+		); err != nil {
+			return nil, fmt.Errorf("scan: %w", rows.Err())
+		}
+
+		entries = append(entries, entry)
+	}
+
+	if rows.Err() != nil {
+		return nil, fmt.Errorf("rows err: %w", rows.Err())
+	}
+
+	if len(entries) == 0 {
+		return nil, ErrEntryNotFound
+	}
+
+	return entries, nil
+}
+
+func (r *Repository) GetProjectEntriesForInterval(
+	_ context.Context,
+	userID int64,
+	projectID int64,
+	start time.Time,
+	end time.Time) ([]Entry, error) {
+	rows, err := r.db.Query(
+		`SELECT 
+			id,
+			user_id,
+			project_id,
+			name,
+			time_start,
+			time_end
+		FROM entries
+		WHERE user_id = $1 AND project_id = $2 AND time_start BETWEEN $3 AND $4`,
+		userID, projectID, start, end)
+
+	if err != nil {
+		return nil, fmt.Errorf("query: %w", err)
+	}
+
+	defer func() {
+		_ = rows.Close()
+	}()
+
+	var entries []Entry
+	for rows.Next() {
+		var entry Entry
+		if err = rows.Scan(
+			&entry.ID,
+			&entry.UserID,
+			&entry.ProjectID,
+			&entry.Name,
+			&entry.TimeStart,
+			&entry.TimeEnd,
+		); err != nil {
+			return nil, fmt.Errorf("scan: %w", rows.Err())
+		}
+
+		entries = append(entries, entry)
+	}
+
+	if rows.Err() != nil {
+		return nil, fmt.Errorf("rows err: %w", rows.Err())
+	}
+
+	if len(entries) == 0 {
+		return nil, ErrEntryNotFound
+	}
+
+	return entries, nil
+}
+
 func (r *Repository) GetProjectsInfo(_ context.Context, projectIDs []int64) ([]ProjectInfo, error) {
 	rows, err := r.db.Query(
 		`SELECT 
