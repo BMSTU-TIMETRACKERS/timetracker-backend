@@ -90,7 +90,7 @@ func (tt TimeTracker) Run() error {
 
 	// Usecases.
 	entryUsecase := entryUC.NewUsecase(entryRepository)
-	projectUsecase := projectUC.NewUsecase(projectRepository)
+	projectUsecase := projectUC.NewUsecase(projectRepository, entryRepository)
 
 	// Мидлвары.
 	authMW := middleware.NewAuthMiddleware()

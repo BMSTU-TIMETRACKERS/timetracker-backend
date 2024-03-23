@@ -134,11 +134,11 @@ const docTemplate = `{
                 "summary": "Get my projects.",
                 "responses": {
                     "200": {
-                        "description": "success create project",
+                        "description": "success get projects",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/delivery.ProjectOut"
+                                "$ref": "#/definitions/internal_project_delivery.ProjectOut"
                             }
                         }
                     },
@@ -146,6 +146,49 @@ const docTemplate = `{
                         "description": "bad request",
                         "schema": {
                             "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/projects/stat": {
+            "get": {
+                "description": "Get project stats",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Get project stats.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "RFC3339 format",
+                        "name": "time_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "RFC3339 format",
+                        "name": "time_end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/internal_project_delivery.ProjectsStatOut"
                         }
                     },
                     "500": {
@@ -177,7 +220,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/delivery.CreateProjectIn"
+                            "$ref": "#/definitions/internal_project_delivery.CreateProjectIn"
                         }
                     }
                 ],
@@ -185,7 +228,7 @@ const docTemplate = `{
                     "200": {
                         "description": "success create project",
                         "schema": {
-                            "$ref": "#/definitions/delivery.CreateProjectOut"
+                            "$ref": "#/definitions/internal_project_delivery.CreateProjectOut"
                         }
                     },
                     "400": {
@@ -211,39 +254,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "delivery.CreateProjectIn": {
-            "type": "object",
-            "required": [
-                "name"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "delivery.CreateProjectOut": {
-            "type": "object",
-            "required": [
-                "id"
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "delivery.ProjectOut": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "echo.HTTPError": {
             "type": "object",
             "properties": {
@@ -303,6 +313,70 @@ const docTemplate = `{
                 },
                 "time_start": {
                     "type": "string"
+                }
+            }
+        },
+        "internal_project_delivery.CreateProjectIn": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_project_delivery.CreateProjectOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_project_delivery.ProjectOut": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_project_delivery.ProjectStat": {
+            "type": "object",
+            "properties": {
+                "duration_in_hours": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percent_duration": {
+                    "type": "number"
+                }
+            }
+        },
+        "internal_project_delivery.ProjectsStatOut": {
+            "type": "object",
+            "properties": {
+                "projects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_project_delivery.ProjectStat"
+                    }
+                },
+                "total_duration_in_hours": {
+                    "type": "number"
                 }
             }
         }

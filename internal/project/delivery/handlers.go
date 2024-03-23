@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 
@@ -16,6 +17,7 @@ import (
 type usecase interface {
 	CreateProject(ctx context.Context, project usecaseDto.Project) (int64, error)
 	GetUserProjects(ctx context.Context, userID int64) ([]usecaseDto.Project, error)
+	ProjectsStats(ctx context.Context, userID int64, timeStart, timeEnd time.Time) (usecaseDto.AllProjectsStat, error)
 }
 
 type Delivery struct {
@@ -37,6 +39,7 @@ func RegisterHandlers(
 
 	e.POST("/projects/create", handler.CreateProject)
 	e.GET("/me/projects", handler.GetMyProjects)
+	e.GET("/me/projects/stat", handler.GetProjectsStat)
 }
 
 // CreateProject godoc
@@ -95,7 +98,7 @@ func (d *Delivery) CreateProject(c echo.Context) error {
 // @Tags     	 projects
 // @Accept	 	application/json
 // @Produce  	application/json
-// @Success  200 {object} []ProjectOut "success create project"
+// @Success  200 {object} []ProjectOut "success get projects"
 // @Failure 500 {object} echo.HTTPError "internal server error"
 // @Failure 400 {object} echo.HTTPError "bad request"
 // @Router   /me/projects [get]
@@ -126,6 +129,57 @@ func (d *Delivery) GetMyProjects(c echo.Context) error {
 	return c.JSON(http.StatusOK, out)
 }
 
+// GetProjectsStat godoc
+// @Summary      Get project stats.
+// @Description  Get project stats
+// @Tags     	 projects
+// @Accept	 	application/json
+// @Produce  	application/json
+// @Param        time_start    query     string  false  "RFC3339 format"
+// @Param        time_end    query     string  false  "RFC3339 format"
+// @Success  200 {object} ProjectsStatOut "success"
+// @Failure 500 {object} echo.HTTPError "internal server error"
+// @Router   /me/projects/stat [get]
+func (d *Delivery) GetProjectsStat(c echo.Context) error {
+	ctx := context.Background()
+
+	userID, ok := c.Get("user_id").(int64)
+	if !ok {
+		c.Logger().Error("can't parse context user_id")
+		return echo.NewHTTPError(
+			http.StatusInternalServerError,
+			response.ErrorMsgsByCode[http.StatusInternalServerError],
+		)
+	}
+
+	timeStartStr := c.QueryParam("time_start")
+	timeEndStr := c.QueryParam("time_end")
+
+	timeStart := time.Time{}
+	timeEnd := time.Now()
+
+	if timeStartStr != "" {
+		// Намеренный скип ошибки.
+		timeStart, _ = time.Parse(time.RFC3339, timeStartStr)
+	}
+
+	if timeEndStr != "" {
+		// Намеренный скип ошибки.
+		timeEnd, _ = time.Parse(time.RFC3339, timeEndStr)
+	}
+
+	projectsStat, err := d.usecase.ProjectsStats(ctx, userID, timeStart, timeEnd)
+
+	if err != nil {
+		c.Logger().Errorf("usecase: %v", err)
+		return handleUsecaseError(err)
+	}
+
+	out := convertFromUsecaseProjectsStat(projectsStat)
+
+	return c.JSON(http.StatusOK, out)
+}
+
 func handleUsecaseError(err error) *echo.HTTPError {
 	// Не нашли запись времени.
 	if errors.Is(err, usecaseDto.ErrProjectNotFound) {
@@ -148,6 +202,23 @@ func convertFromUsecaseProjects(projects []usecaseDto.Project) []ProjectOut {
 	}
 
 	return out
+}
+
+func convertFromUsecaseProjectsStat(stat usecaseDto.AllProjectsStat) ProjectsStatOut {
+	projectsOut := make([]ProjectStat, 0, len(stat.ProjectsStat))
+	for _, s := range stat.ProjectsStat {
+		projectsOut = append(projectsOut, ProjectStat{
+			ID:              s.ProjectID,
+			Name:            s.ProjectName,
+			DurationInHours: s.ProjectDurationInHours,
+			PercentDuration: s.ProjectDurationPercent,
+		})
+	}
+
+	return ProjectsStatOut{
+		TotalDurationInHours: stat.TotalDurationInHours,
+		Projects:             projectsOut,
+	}
 }
 
 func convertFromUsecaseProject(project usecaseDto.Project) ProjectOut {
