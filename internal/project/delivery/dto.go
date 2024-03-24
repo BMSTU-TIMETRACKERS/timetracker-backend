@@ -24,3 +24,14 @@ type ProjectStat struct {
 	DurationInHours float64 `json:"duration_in_hours"`
 	PercentDuration float64 `json:"percent_duration"`
 }
+
+type ProjectEntriesStatOut struct {
+	TotalDurationInHours float64              `json:"total_duration_in_hours"`
+	Entries              []ProjectEntriesStat `json:"entries"`
+}
+
+type ProjectEntriesStat struct {
+	Name            string  `json:"name"`
+	DurationInHours float64 `json:"duration_in_hours"`
+	PercentDuration float64 `json:"percent_duration"`
+}
