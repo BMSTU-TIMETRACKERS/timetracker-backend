@@ -83,18 +83,18 @@ func (u *Usecase) ProjectStat(ctx context.Context, projectID int64, userID int64
 
 	// Собираем уникальные имена записей, чтобы сложить по ним стату.
 	entriesStatMap := make(map[string]ProjectEntrieInfo)
-	totalDurationHours := float64(0)
+	totalDurationSec := float64(0)
 	for _, e := range projectEntries {
-		durationHours := e.TimeEnd.Sub(e.TimeStart).Hours()
+		durationSec := e.TimeEnd.Sub(e.TimeStart).Seconds()
 
 		// Структура при получении из мапы копируется, поэтому надо ее переприсваивать.
 		tmpInfo := entriesStatMap[e.Name]
 		tmpInfo.EntryName = e.Name
-		tmpInfo.EntryDurationInHours += durationHours
+		tmpInfo.EntryDurationInSec += durationSec
 
 		entriesStatMap[e.Name] = tmpInfo
 
-		totalDurationHours += durationHours
+		totalDurationSec += durationSec
 	}
 
 	// Собираем стату в массив.
@@ -102,14 +102,14 @@ func (u *Usecase) ProjectStat(ctx context.Context, projectID int64, userID int64
 	for _, v := range entriesStatMap {
 		entriesStat = append(entriesStat, ProjectEntrieInfo{
 			EntryName:            v.EntryName,
-			EntryDurationInHours: v.EntryDurationInHours,
-			EntryDurationPercent: calculatePercentDuration(v.EntryDurationInHours, totalDurationHours),
+			EntryDurationInSec:   v.EntryDurationInSec,
+			EntryDurationPercent: calculatePercentDuration(v.EntryDurationInSec, totalDurationSec),
 		})
 	}
 
 	return AllProjectEntriesStat{
-		TotalDurationInHours: totalDurationHours,
-		EntriesStat:          entriesStat,
+		TotalDurationInSec: totalDurationSec,
+		EntriesStat:        entriesStat,
 	}, nil
 }
 
@@ -123,8 +123,8 @@ func (u *Usecase) ProjectsStats(ctx context.Context, userID int64, timeStart, ti
 	}
 
 	generalStat := AllProjectsStat{
-		TotalDurationInHours: 0,
-		ProjectsStat:         nil,
+		TotalDurationInSec: 0,
+		ProjectsStat:       nil,
 	}
 
 	projectStats := make([]ProjectStatInfo, 0, len(repoProjects))
@@ -137,15 +137,15 @@ func (u *Usecase) ProjectsStats(ctx context.Context, userID int64, timeStart, ti
 			return AllProjectsStat{}, fmt.Errorf("get project stat: %v", err)
 		}
 		projectStats = append(projectStats, stat)
-		generalStat.TotalDurationInHours += stat.ProjectDurationInHours
+		generalStat.TotalDurationInSec += stat.ProjectDurationInSec
 	}
 
 	generalStat.ProjectsStat = projectStats
 
 	for idx := range generalStat.ProjectsStat {
 		generalStat.ProjectsStat[idx].ProjectDurationPercent = calculatePercentDuration(
-			generalStat.ProjectsStat[idx].ProjectDurationInHours,
-			generalStat.TotalDurationInHours,
+			generalStat.ProjectsStat[idx].ProjectDurationInSec,
+			generalStat.TotalDurationInSec,
 		)
 	}
 
@@ -163,7 +163,7 @@ func (u *Usecase) getProjectStat(ctx context.Context, userID int64, project repo
 	return ProjectStatInfo{
 		ProjectID:              project.ID,
 		ProjectName:            project.Name,
-		ProjectDurationInHours: projectDuration.Hours(),
+		ProjectDurationInSec:   projectDuration.Seconds(),
 		ProjectDurationPercent: 0,
 	}, err
 }

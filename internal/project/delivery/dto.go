@@ -14,24 +14,24 @@ type ProjectOut struct {
 }
 
 type ProjectsStatOut struct {
-	TotalDurationInHours float64       `json:"total_duration_in_hours"`
-	Projects             []ProjectStat `json:"projects"`
+	TotalDurationInSec float64       `json:"total_duration_in_sec"`
+	Projects           []ProjectStat `json:"projects"`
 }
 
 type ProjectStat struct {
 	ID              int64   `json:"id"`
 	Name            string  `json:"name"`
-	DurationInHours float64 `json:"duration_in_hours"`
+	DurationInSec   float64 `json:"duration_in_sec"`
 	PercentDuration float64 `json:"percent_duration"`
 }
 
 type ProjectEntriesStatOut struct {
-	TotalDurationInHours float64              `json:"total_duration_in_hours"`
-	Entries              []ProjectEntriesStat `json:"entries"`
+	TotalDurationInSec float64              `json:"total_duration_in_sec"`
+	Entries            []ProjectEntriesStat `json:"entries"`
 }
 
 type ProjectEntriesStat struct {
 	Name            string  `json:"name"`
-	DurationInHours float64 `json:"duration_in_hours"`
+	DurationInSec   float64 `json:"duration_in_sec"`
 	PercentDuration float64 `json:"percent_duration"`
 }
