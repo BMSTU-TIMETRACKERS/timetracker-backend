@@ -56,7 +56,7 @@ definitions:
     type: object
   internal_project_delivery.ProjectEntriesStat:
     properties:
-      duration_in_hours:
+      duration_in_sec:
         type: number
       name:
         type: string
@@ -69,7 +69,7 @@ definitions:
         items:
           $ref: '#/definitions/internal_project_delivery.ProjectEntriesStat'
         type: array
-      total_duration_in_hours:
+      total_duration_in_sec:
         type: number
     type: object
   internal_project_delivery.ProjectOut:
@@ -81,7 +81,7 @@ definitions:
     type: object
   internal_project_delivery.ProjectStat:
     properties:
-      duration_in_hours:
+      duration_in_sec:
         type: number
       id:
         type: integer
@@ -96,7 +96,7 @@ definitions:
         items:
           $ref: '#/definitions/internal_project_delivery.ProjectStat'
         type: array
-      total_duration_in_hours:
+      total_duration_in_sec:
         type: number
     type: object
 info:
