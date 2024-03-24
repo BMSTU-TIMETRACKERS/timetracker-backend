@@ -298,8 +298,8 @@ func convertFromUsecaseProjectEntriesStat(stat usecaseDto.AllProjectEntriesStat)
 	}
 
 	return ProjectEntriesStatOut{
-		TotalDurationInSeconds: stat.TotalDurationInSec,
-		Entries:                entriesOut,
+		TotalDurationInSec: stat.TotalDurationInSec,
+		Entries:            entriesOut,
 	}
 }
 
