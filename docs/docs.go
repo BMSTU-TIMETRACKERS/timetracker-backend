@@ -200,6 +200,62 @@ const docTemplate = `{
                 }
             }
         },
+        "/me/projects/{id}/stat": {
+            "get": {
+                "description": "Get project entries stat",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Get project entries stat.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "RFC3339 format",
+                        "name": "time_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "RFC3339 format",
+                        "name": "time_end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/internal_project_delivery.ProjectEntriesStatOut"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/projects/create": {
             "post": {
                 "description": "Create project.",
@@ -335,6 +391,34 @@ const docTemplate = `{
             "properties": {
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "internal_project_delivery.ProjectEntriesStat": {
+            "type": "object",
+            "properties": {
+                "duration_in_hours": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percent_duration": {
+                    "type": "number"
+                }
+            }
+        },
+        "internal_project_delivery.ProjectEntriesStatOut": {
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_project_delivery.ProjectEntriesStat"
+                    }
+                },
+                "total_duration_in_hours": {
+                    "type": "number"
                 }
             }
         },

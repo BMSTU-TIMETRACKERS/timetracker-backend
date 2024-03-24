@@ -54,6 +54,24 @@ definitions:
     required:
     - id
     type: object
+  internal_project_delivery.ProjectEntriesStat:
+    properties:
+      duration_in_hours:
+        type: number
+      name:
+        type: string
+      percent_duration:
+        type: number
+    type: object
+  internal_project_delivery.ProjectEntriesStatOut:
+    properties:
+      entries:
+        items:
+          $ref: '#/definitions/internal_project_delivery.ProjectEntriesStat'
+        type: array
+      total_duration_in_hours:
+        type: number
+    type: object
   internal_project_delivery.ProjectOut:
     properties:
       id:
@@ -175,6 +193,43 @@ paths:
           schema:
             $ref: '#/definitions/echo.HTTPError'
       summary: Get my projects.
+      tags:
+      - projects
+  /me/projects/{id}/stat:
+    get:
+      consumes:
+      - application/json
+      description: Get project entries stat
+      parameters:
+      - description: project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: RFC3339 format
+        in: query
+        name: time_start
+        type: string
+      - description: RFC3339 format
+        in: query
+        name: time_end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/internal_project_delivery.ProjectEntriesStatOut'
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Get project entries stat.
       tags:
       - projects
   /me/projects/stat:

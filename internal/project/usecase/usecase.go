@@ -75,6 +75,44 @@ func (u *Usecase) GetUserProjects(ctx context.Context, userID int64) ([]Project,
 	return projects, nil
 }
 
+func (u *Usecase) ProjectStat(ctx context.Context, projectID int64, userID int64, timeStart, timeEnd time.Time) (AllProjectEntriesStat, error) {
+	projectEntries, err := u.entryRepository.GetProjectEntriesForInterval(ctx, userID, projectID, timeStart, timeEnd)
+	if err != nil {
+		return AllProjectEntriesStat{}, fmt.Errorf("get project entries error: %w", err)
+	}
+
+	// Собираем уникальные имена записей, чтобы сложить по ним стату.
+	entriesStatMap := make(map[string]ProjectEntrieInfo)
+	totalDurationHours := float64(0)
+	for _, e := range projectEntries {
+		durationHours := e.TimeEnd.Sub(e.TimeStart).Hours()
+
+		// Структура при получении из мапы копируется, поэтому надо ее переприсваивать.
+		tmpInfo := entriesStatMap[e.Name]
+		tmpInfo.EntryName = e.Name
+		tmpInfo.EntryDurationInHours += durationHours
+
+		entriesStatMap[e.Name] = tmpInfo
+
+		totalDurationHours += durationHours
+	}
+
+	// Собираем стату в массив.
+	entriesStat := make([]ProjectEntrieInfo, 0, len(entriesStatMap))
+	for _, v := range entriesStatMap {
+		entriesStat = append(entriesStat, ProjectEntrieInfo{
+			EntryName:            v.EntryName,
+			EntryDurationInHours: v.EntryDurationInHours,
+			EntryDurationPercent: calculatePercentDuration(v.EntryDurationInHours, totalDurationHours),
+		})
+	}
+
+	return AllProjectEntriesStat{
+		TotalDurationInHours: totalDurationHours,
+		EntriesStat:          entriesStat,
+	}, nil
+}
+
 func (u *Usecase) ProjectsStats(ctx context.Context, userID int64, timeStart, timeEnd time.Time) (AllProjectsStat, error) {
 	repoProjects, err := u.repository.GetUserProjects(ctx, userID)
 	if err != nil {

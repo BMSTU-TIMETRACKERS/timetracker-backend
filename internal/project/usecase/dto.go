@@ -17,3 +17,14 @@ type AllProjectsStat struct {
 	TotalDurationInHours float64
 	ProjectsStat         []ProjectStatInfo
 }
+
+type ProjectEntrieInfo struct {
+	EntryName            string
+	EntryDurationInHours float64
+	EntryDurationPercent float64
+}
+
+type AllProjectEntriesStat struct {
+	TotalDurationInHours float64
+	EntriesStat          []ProjectEntrieInfo
+}
