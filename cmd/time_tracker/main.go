@@ -16,6 +16,9 @@ import (
 	entryDelivery "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/entry/delivery"
 	entryRepo "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/entry/repository"
 	entryUC "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/entry/usecase"
+	goalDelivery "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/goal/delivery"
+	goalRepo "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/goal/repository"
+	goalUC "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/goal/usecase"
 	"github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/middleware"
 	projectDelivery "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/delivery"
 	projectRepo "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/repository"
@@ -87,10 +90,12 @@ func (tt TimeTracker) Run() error {
 	// Репозитории.
 	entryRepository := entryRepo.NewRepository(postgresClient)
 	projectRepository := projectRepo.NewRepository(postgresClient)
+	goalRepository := goalRepo.NewRepository(postgresClient)
 
 	// Usecases.
 	entryUsecase := entryUC.NewUsecase(entryRepository)
 	projectUsecase := projectUC.NewUsecase(projectRepository, entryRepository)
+	goalUsecase := goalUC.NewUsecase(goalRepository)
 
 	// Мидлвары.
 	authMW := middleware.NewAuthMiddleware()
@@ -101,6 +106,7 @@ func (tt TimeTracker) Run() error {
 	// Регистрация обработчиков.
 	entryDelivery.RegisterHandlers(e, entryUsecase, logger)
 	projectDelivery.RegisterHandlers(e, projectUsecase, logger)
+	goalDelivery.RegisterHandlers(e, goalUsecase, logger)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
