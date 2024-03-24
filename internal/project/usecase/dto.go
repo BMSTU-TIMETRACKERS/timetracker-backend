@@ -9,22 +9,22 @@ type Project struct {
 type ProjectStatInfo struct {
 	ProjectID              int64
 	ProjectName            string
-	ProjectDurationInHours float64
+	ProjectDurationInSec   float64
 	ProjectDurationPercent float64
 }
 
 type AllProjectsStat struct {
-	TotalDurationInHours float64
-	ProjectsStat         []ProjectStatInfo
+	TotalDurationInSec float64
+	ProjectsStat       []ProjectStatInfo
 }
 
 type ProjectEntrieInfo struct {
 	EntryName            string
-	EntryDurationInHours float64
+	EntryDurationInSec   float64
 	EntryDurationPercent float64
 }
 
 type AllProjectEntriesStat struct {
-	TotalDurationInHours float64
-	EntriesStat          []ProjectEntrieInfo
+	TotalDurationInSec float64
+	EntriesStat        []ProjectEntrieInfo
 }

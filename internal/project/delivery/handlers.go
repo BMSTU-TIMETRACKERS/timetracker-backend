@@ -276,14 +276,14 @@ func convertFromUsecaseProjectsStat(stat usecaseDto.AllProjectsStat) ProjectsSta
 		projectsOut = append(projectsOut, ProjectStat{
 			ID:              s.ProjectID,
 			Name:            s.ProjectName,
-			DurationInHours: s.ProjectDurationInHours,
+			DurationInSec:   s.ProjectDurationInSec,
 			PercentDuration: s.ProjectDurationPercent,
 		})
 	}
 
 	return ProjectsStatOut{
-		TotalDurationInHours: stat.TotalDurationInHours,
-		Projects:             projectsOut,
+		TotalDurationInSec: stat.TotalDurationInSec,
+		Projects:           projectsOut,
 	}
 }
 
@@ -292,14 +292,14 @@ func convertFromUsecaseProjectEntriesStat(stat usecaseDto.AllProjectEntriesStat)
 	for _, s := range stat.EntriesStat {
 		entriesOut = append(entriesOut, ProjectEntriesStat{
 			Name:            s.EntryName,
-			DurationInHours: s.EntryDurationInHours,
+			DurationInSec:   s.EntryDurationInSec,
 			PercentDuration: s.EntryDurationPercent,
 		})
 	}
 
 	return ProjectEntriesStatOut{
-		TotalDurationInHours: stat.TotalDurationInHours,
-		Entries:              entriesOut,
+		TotalDurationInSeconds: stat.TotalDurationInSec,
+		Entries:                entriesOut,
 	}
 }
 

@@ -397,7 +397,7 @@ const docTemplate = `{
         "internal_project_delivery.ProjectEntriesStat": {
             "type": "object",
             "properties": {
-                "duration_in_hours": {
+                "duration_in_sec": {
                     "type": "number"
                 },
                 "name": {
@@ -417,7 +417,7 @@ const docTemplate = `{
                         "$ref": "#/definitions/internal_project_delivery.ProjectEntriesStat"
                     }
                 },
-                "total_duration_in_hours": {
+                "total_duration_in_sec": {
                     "type": "number"
                 }
             }
@@ -436,7 +436,7 @@ const docTemplate = `{
         "internal_project_delivery.ProjectStat": {
             "type": "object",
             "properties": {
-                "duration_in_hours": {
+                "duration_in_sec": {
                     "type": "number"
                 },
                 "id": {
@@ -459,7 +459,7 @@ const docTemplate = `{
                         "$ref": "#/definitions/internal_project_delivery.ProjectStat"
                     }
                 },
-                "total_duration_in_hours": {
+                "total_duration_in_sec": {
                     "type": "number"
                 }
             }
