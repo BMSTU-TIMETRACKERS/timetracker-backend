@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrEntryNotFound = errors.New("entry not found")
+	ErrGoalNotFound = errors.New("goal not found")
 )
 
 type Repository struct {
@@ -119,7 +119,7 @@ ORDER BY g.date_start`, userID, projectID)
 	}
 
 	if len(goals) == 0 {
-		return nil, ErrEntryNotFound
+		return nil, ErrGoalNotFound
 	}
 
 	return goals, nil

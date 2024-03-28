@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS goals
     user_id INT         NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     name    VARCHAR(35) NOT NULL,
     time_seconds BIGINT NOT NULL,
-    date_start date NOT NULL,
-    date_end   date NOT NULL
+    date_start timestamp NOT NULL,
+    date_end   timestamp NOT NULL
 )

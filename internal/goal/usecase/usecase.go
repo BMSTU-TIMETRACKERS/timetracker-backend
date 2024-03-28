@@ -39,6 +39,10 @@ func (u *Usecase) CreateGoal(ctx context.Context, goal Goal) (int64, error) {
 func (u *Usecase) GetGoals(ctx context.Context, userID, projectID int64) ([]Goal, error) {
 	goals, err := u.repository.GetGoals(ctx, userID, projectID)
 	if err != nil {
+		if errors.Is(err, repo.ErrGoalNotFound) {
+			return []Goal{}, nil
+		}
+
 		return nil, fmt.Errorf("repo get goals: %v", err)
 	}
 
@@ -55,7 +59,7 @@ func (u *Usecase) GetGoals(ctx context.Context, userID, projectID int64) ([]Goal
 				timeStart = entry.TimeStart
 			}
 
-			if goal.DateEnd.AddDate(0, 0, 1).Before(entry.TimeEnd) {
+			if goal.DateEnd.Before(entry.TimeEnd) {
 				timeEnd = goal.DateEnd
 			} else {
 				timeEnd = entry.TimeEnd
@@ -89,7 +93,7 @@ func convertToRepoGoal(goal Goal) repo.Goal {
 		UserID:      goal.UserID,
 		TimeSeconds: goal.TimeSeconds,
 		Name:        goal.Name,
-		DateStart:   goal.DateStart,
-		DateEnd:     goal.DateEnd,
+		DateStart:   time.Date(goal.DateStart.Year(), goal.DateStart.Month(), goal.DateStart.Day(), 0, 0, 0, 0, goal.DateStart.Location()),
+		DateEnd:     time.Date(goal.DateEnd.Year(), goal.DateEnd.Month(), goal.DateEnd.Day(), 23, 59, 59, 0, goal.DateEnd.Location()),
 	}
 }

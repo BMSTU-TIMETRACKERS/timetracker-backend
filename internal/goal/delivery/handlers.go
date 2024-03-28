@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/labstack/echo/v4"
 
@@ -70,18 +69,6 @@ func (d *Delivery) CreateGoal(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, response.ErrorMsgsByCode[http.StatusBadRequest])
 	}
 
-	dateStart, err := time.Parse(time.DateOnly, in.DateStart)
-	if err != nil {
-		c.Logger().Errorf("dateStart parse: %v", err)
-		return echo.NewHTTPError(http.StatusBadRequest, response.ErrorMsgsByCode[http.StatusBadRequest])
-	}
-
-	dateEnd, err := time.Parse(time.DateOnly, in.DateEnd)
-	if err != nil {
-		c.Logger().Errorf("dateStart parse: %v", err)
-		return echo.NewHTTPError(http.StatusBadRequest, response.ErrorMsgsByCode[http.StatusBadRequest])
-	}
-
 	// Получаем userID (проставляется в auth мидлваре).
 	userID, ok := c.Get("user_id").(int64)
 	if !ok {
@@ -93,8 +80,8 @@ func (d *Delivery) CreateGoal(c echo.Context) error {
 		ProjectID:   in.ProjectID,
 		TimeSeconds: in.TimeSeconds,
 		Name:        in.Name,
-		DateStart:   dateStart,
-		DateEnd:     dateEnd,
+		DateStart:   in.DateStart,
+		DateEnd:     in.DateEnd,
 	}
 
 	goal.UserID = userID
@@ -177,8 +164,8 @@ func convertFromUsecaseEntries(goals []usecaseDto.Goal) []GoalOut {
 			UserID:          goal.UserID,
 			TimeSeconds:     goal.TimeSeconds,
 			Name:            goal.Name,
-			DateStart:       goal.DateStart.Format(time.DateOnly),
-			DateEnd:         goal.DateEnd.Format(time.DateOnly),
+			DateStart:       goal.DateStart,
+			DateEnd:         goal.DateEnd,
 			DurationSeconds: goal.DurationSeconds,
 			Percent:         goal.Percent,
 		}
