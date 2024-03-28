@@ -62,6 +62,64 @@
                 }
             }
         },
+        "/goals/create": {
+            "post": {
+                "description": "Create goal.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "goals"
+                ],
+                "summary": "Create goal.",
+                "parameters": [
+                    {
+                        "description": "goal info",
+                        "name": "goal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_goal_delivery.CreateGoalIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success create goal",
+                        "schema": {
+                            "$ref": "#/definitions/internal_goal_delivery.CreateGoalOut"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "item is not found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "unprocessable entity",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/me/entries": {
             "get": {
                 "description": "Get my entries or get my entries for a day",
@@ -127,7 +185,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_project_delivery.ProjectOut"
+                                "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectOut"
                             }
                         }
                     },
@@ -177,7 +235,7 @@
                     "200": {
                         "description": "success",
                         "schema": {
-                            "$ref": "#/definitions/internal_project_delivery.ProjectsStatOut"
+                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectsStatOut"
                         }
                     },
                     "500": {
@@ -227,7 +285,54 @@
                     "200": {
                         "description": "success",
                         "schema": {
-                            "$ref": "#/definitions/internal_project_delivery.ProjectEntriesStatOut"
+                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectEntriesStatOut"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/projects/{project_id}/goals": {
+            "get": {
+                "description": "Get my goals for project",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "goals"
+                ],
+                "summary": "Get my goals for project.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success get goals",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_goal_delivery.GoalOut"
+                            }
                         }
                     },
                     "400": {
@@ -265,7 +370,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_project_delivery.CreateProjectIn"
+                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.CreateProjectIn"
                         }
                     }
                 ],
@@ -273,7 +378,7 @@
                     "200": {
                         "description": "success create project",
                         "schema": {
-                            "$ref": "#/definitions/internal_project_delivery.CreateProjectOut"
+                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.CreateProjectOut"
                         }
                     },
                     "400": {
@@ -303,6 +408,224 @@
             "type": "object",
             "properties": {
                 "message": {}
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_entry_delivery.CreateEntryIn": {
+            "type": "object",
+            "required": [
+                "project_id",
+                "time_end",
+                "time_start"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "time_end": {
+                    "type": "string"
+                },
+                "time_start": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_entry_delivery.CreateEntryOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_entry_delivery.EntryOut": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "project_name": {
+                    "type": "string"
+                },
+                "time_end": {
+                    "type": "string"
+                },
+                "time_start": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.CreateGoalIn": {
+            "type": "object",
+            "required": [
+                "date_end",
+                "date_start",
+                "name",
+                "project_id",
+                "time_seconds"
+            ],
+            "properties": {
+                "date_end": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "time_seconds": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.CreateGoalOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.GoalOut": {
+            "type": "object",
+            "properties": {
+                "date_end": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "duration_seconds": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percent": {
+                    "type": "number"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "time_seconds": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.CreateProjectIn": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.CreateProjectOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectEntriesStat": {
+            "type": "object",
+            "properties": {
+                "duration_in_sec": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percent_duration": {
+                    "type": "number"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectEntriesStatOut": {
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectEntriesStat"
+                    }
+                },
+                "total_duration_in_sec": {
+                    "type": "number"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectOut": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectStat": {
+            "type": "object",
+            "properties": {
+                "duration_in_sec": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percent_duration": {
+                    "type": "number"
+                }
+            }
+        },
+        "github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectsStatOut": {
+            "type": "object",
+            "properties": {
+                "projects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectStat"
+                    }
+                },
+                "total_duration_in_sec": {
+                    "type": "number"
+                }
             }
         },
         "internal_entry_delivery.CreateEntryIn": {
@@ -358,6 +681,76 @@
                 },
                 "time_start": {
                     "type": "string"
+                }
+            }
+        },
+        "internal_goal_delivery.CreateGoalIn": {
+            "type": "object",
+            "required": [
+                "date_end",
+                "date_start",
+                "name",
+                "project_id",
+                "time_seconds"
+            ],
+            "properties": {
+                "date_end": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "time_seconds": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_goal_delivery.CreateGoalOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_goal_delivery.GoalOut": {
+            "type": "object",
+            "properties": {
+                "date_end": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "duration_seconds": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percent": {
+                    "type": "number"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "time_seconds": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

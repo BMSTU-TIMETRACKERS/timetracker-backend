@@ -10,11 +10,15 @@ import (
 	repo "github.com/BMSTU-TIMETRACKERS/timetracker-backend/internal/project/repository"
 )
 
-var ErrProjectNotFound = errors.New("project not found")
+var (
+	ErrProjectNotFound = errors.New("project not found")
+	ErrProjectExists   = errors.New("project with that name already exists")
+)
 
 type repository interface {
 	CreateProject(ctx context.Context, project repo.Project) (int64, error)
 	GetUserProjects(ctx context.Context, userID int64) ([]repo.Project, error)
+	GetProjectByName(ctx context.Context, userID int64, projectName string) (repo.Project, error)
 }
 
 type entryRepository interface {
@@ -44,6 +48,14 @@ func NewUsecase(repository repository, entryRepository entryRepository) *Usecase
 }
 
 func (u *Usecase) CreateProject(ctx context.Context, project Project) (int64, error) {
+	oldProject, err := u.repository.GetProjectByName(ctx, project.UserID, project.Name)
+	if err != nil && !errors.Is(err, repo.ErrProjectNotFound) {
+		return 0, fmt.Errorf("repo get project by name: %v", err)
+	}
+	if oldProject.ID != 0 {
+		return 0, ErrProjectExists
+	}
+
 	id, err := u.repository.CreateProject(ctx, convertToRepoProject(project))
 
 	if err != nil {

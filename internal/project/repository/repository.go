@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -87,4 +88,25 @@ func (r *Repository) GetUserProjects(ctx context.Context, userID int64) ([]Proje
 	}
 
 	return projects, nil
+}
+
+func (r *Repository) GetProjectByName(ctx context.Context, userID int64, projectName string) (Project, error) {
+	var project Project
+	err := r.db.QueryRow(
+		`SELECT 
+			id,
+			user_id,
+			name
+		FROM projects
+		WHERE user_id = $1 AND name = $2 LIMIT 1`, userID, projectName).Scan(&project.ID, &project.UserID, &project.Name)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return Project{}, ErrProjectNotFound
+		}
+
+		return Project{}, fmt.Errorf("scan: %w", err)
+	}
+
+	return project, nil
 }
