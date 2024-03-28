@@ -341,14 +341,14 @@ paths:
         name: goal
         required: true
         schema:
-          $ref: '#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.CreateGoalIn'
+          $ref: '#/definitions/internal_goal_delivery.CreateGoalIn'
       produces:
       - application/json
       responses:
         "200":
           description: success create goal
           schema:
-            $ref: '#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.CreateGoalOut'
+            $ref: '#/definitions/internal_goal_delivery.CreateGoalOut'
         "400":
           description: bad request
           schema:
@@ -410,7 +410,7 @@ paths:
           description: success get projects
           schema:
             items:
-              $ref: '#/definitions/internal_project_delivery.ProjectOut'
+              $ref: '#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectOut'
             type: array
         "400":
           description: bad request
@@ -448,7 +448,7 @@ paths:
         "200":
           description: success
           schema:
-            $ref: '#/definitions/internal_project_delivery.ProjectEntriesStatOut'
+            $ref: '#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectEntriesStatOut'
         "400":
           description: bad request
           schema:
@@ -478,7 +478,7 @@ paths:
           description: success get goals
           schema:
             items:
-              $ref: '#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.GoalOut'
+              $ref: '#/definitions/internal_goal_delivery.GoalOut'
             type: array
         "400":
           description: bad request
@@ -511,7 +511,7 @@ paths:
         "200":
           description: success
           schema:
-            $ref: '#/definitions/internal_project_delivery.ProjectsStatOut'
+            $ref: '#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectsStatOut'
         "500":
           description: internal server error
           schema:
@@ -530,14 +530,14 @@ paths:
         name: project
         required: true
         schema:
-          $ref: '#/definitions/internal_project_delivery.CreateProjectIn'
+          $ref: '#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.CreateProjectIn'
       produces:
       - application/json
       responses:
         "200":
           description: success create project
           schema:
-            $ref: '#/definitions/internal_project_delivery.CreateProjectOut'
+            $ref: '#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.CreateProjectOut'
         "400":
           description: bad request
           schema:

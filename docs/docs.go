@@ -94,7 +94,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.CreateGoalIn"
+                            "$ref": "#/definitions/internal_goal_delivery.CreateGoalIn"
                         }
                     }
                 ],
@@ -102,7 +102,7 @@ const docTemplate = `{
                     "200": {
                         "description": "success create goal",
                         "schema": {
-                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.CreateGoalOut"
+                            "$ref": "#/definitions/internal_goal_delivery.CreateGoalOut"
                         }
                     },
                     "400": {
@@ -197,7 +197,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_project_delivery.ProjectOut"
+                                "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectOut"
                             }
                         }
                     },
@@ -247,7 +247,7 @@ const docTemplate = `{
                     "200": {
                         "description": "success",
                         "schema": {
-                            "$ref": "#/definitions/internal_project_delivery.ProjectsStatOut"
+                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectsStatOut"
                         }
                     },
                     "500": {
@@ -297,7 +297,7 @@ const docTemplate = `{
                     "200": {
                         "description": "success",
                         "schema": {
-                            "$ref": "#/definitions/internal_project_delivery.ProjectEntriesStatOut"
+                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.ProjectEntriesStatOut"
                         }
                     },
                     "400": {
@@ -343,7 +343,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_goal_delivery.GoalOut"
+                                "$ref": "#/definitions/internal_goal_delivery.GoalOut"
                             }
                         }
                     },
@@ -382,7 +382,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_project_delivery.CreateProjectIn"
+                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.CreateProjectIn"
                         }
                     }
                 ],
@@ -390,7 +390,7 @@ const docTemplate = `{
                     "200": {
                         "description": "success create project",
                         "schema": {
-                            "$ref": "#/definitions/internal_project_delivery.CreateProjectOut"
+                            "$ref": "#/definitions/github.com_BMSTU-TIMETRACKERS_timetracker-backend_internal_project_delivery.CreateProjectOut"
                         }
                     },
                     "400": {
