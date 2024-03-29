@@ -144,7 +144,7 @@ func (u *Usecase) ProjectsStats(ctx context.Context, userID int64, timeStart, ti
 		stat, err := u.getProjectStat(ctx, userID, project, timeStart, timeEnd)
 		if err != nil {
 			if errors.Is(err, entryRepoDto.ErrEntryNotFound) {
-				return AllProjectsStat{}, nil
+				continue
 			}
 			return AllProjectsStat{}, fmt.Errorf("get project stat: %v", err)
 		}

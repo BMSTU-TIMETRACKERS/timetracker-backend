@@ -99,8 +99,6 @@ func (u *Usecase) enrichEntries(ctx context.Context, entries []Entry) error {
 		entries[id].ProjectName = projectIdName[entries[id].ProjectID]
 	}
 
-	fmt.Println(entries)
-
 	return nil
 }
 
