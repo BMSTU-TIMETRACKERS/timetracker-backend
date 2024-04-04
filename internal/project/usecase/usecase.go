@@ -15,6 +15,7 @@ var ErrProjectNotFound = errors.New("project not found")
 type repository interface {
 	CreateProject(ctx context.Context, project repo.Project) (int64, error)
 	GetUserProjects(ctx context.Context, userID int64) ([]repo.Project, error)
+	ClearUserData(ctx context.Context, userID int64) error
 }
 
 type entryRepository interface {
@@ -150,6 +151,14 @@ func (u *Usecase) ProjectsStats(ctx context.Context, userID int64, timeStart, ti
 	}
 
 	return generalStat, nil
+}
+
+func (u *Usecase) ClearUserData(ctx context.Context, userID int64) error {
+	if err := u.repository.ClearUserData(ctx, userID); err != nil {
+		return fmt.Errorf("repo clear user data: %v", err)
+	}
+
+	return nil
 }
 
 func (u *Usecase) getProjectStat(ctx context.Context, userID int64, project repo.Project, timeStart, timeEnd time.Time) (ProjectStatInfo, error) {

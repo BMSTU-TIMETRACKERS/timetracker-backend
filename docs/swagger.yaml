@@ -140,6 +140,23 @@ paths:
       summary: Create entry.
       tags:
       - entries
+  /me/clear_data:
+    delete:
+      consumes:
+      - application/json
+      description: Clear all user data.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success create project
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Clear all user data.
+      tags:
+      - user
   /me/entries:
     get:
       consumes:
