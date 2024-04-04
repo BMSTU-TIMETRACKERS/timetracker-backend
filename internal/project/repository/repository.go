@@ -90,6 +90,20 @@ func (r *Repository) GetUserProjects(ctx context.Context, userID int64) ([]Proje
 	return projects, nil
 }
 
+func (r *Repository) ClearUserData(ctx context.Context, userID int64) error {
+	query := `
+				DELETE FROM entries;
+				DELETE FROM goals;
+				DELETE FROM projects;`
+
+	_, err := r.db.ExecContext(ctx, query)
+	if err != nil {
+		return fmt.Errorf("exec context: %v", err)
+	}
+
+	return nil
+}
+
 func (r *Repository) GetProjectByName(ctx context.Context, userID int64, projectName string) (Project, error) {
 	var project Project
 	err := r.db.QueryRow(

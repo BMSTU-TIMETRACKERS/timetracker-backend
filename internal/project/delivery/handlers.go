@@ -20,6 +20,7 @@ type usecase interface {
 	GetUserProjects(ctx context.Context, userID int64) ([]usecaseDto.Project, error)
 	ProjectsStats(ctx context.Context, userID int64, timeStart, timeEnd time.Time) (usecaseDto.AllProjectsStat, error)
 	ProjectStat(ctx context.Context, projectID int64, userID int64, timeStart, timeEnd time.Time) (usecaseDto.AllProjectEntriesStat, error)
+	ClearUserData(ctx context.Context, userID int64) error
 }
 
 type Delivery struct {
@@ -43,6 +44,7 @@ func RegisterHandlers(
 	e.GET("/me/projects", handler.GetMyProjects)
 	e.GET("/me/projects/stat", handler.GetProjectsStat)
 	e.GET("/me/projects/:id/stat", handler.GetProjectStat)
+	e.DELETE("/me/clear_data", handler.ClearData)
 }
 
 // CreateProject godoc
@@ -244,6 +246,33 @@ func (d *Delivery) GetProjectStat(c echo.Context) error {
 	out := convertFromUsecaseProjectEntriesStat(projectEntriesStat)
 
 	return c.JSON(http.StatusOK, out)
+}
+
+// ClearData godoc
+// @Summary      Clear all user data.
+// @Description  Clear all user data.
+// @Tags     	 user
+// @Accept	 application/json
+// @Produce  application/json
+// @Success  200  "success clear user data"
+// @Failure 500 {object} echo.HTTPError "internal server error"
+// @Router   /me/clear_data [delete]
+func (d *Delivery) ClearData(c echo.Context) error {
+	ctx := context.Background()
+
+	userID, ok := c.Get("user_id").(int64)
+	if !ok {
+		c.Logger().Error("can't parse context user_id")
+		return echo.NewHTTPError(http.StatusInternalServerError, response.ErrorMsgsByCode[http.StatusInternalServerError])
+	}
+
+	err := d.usecase.ClearUserData(ctx, userID)
+	if err != nil {
+		c.Logger().Errorf("usecase: %v", err)
+		return handleUsecaseError(err)
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
 func handleUsecaseError(err error) *echo.HTTPError {
