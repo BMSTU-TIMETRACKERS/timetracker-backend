@@ -276,11 +276,14 @@ func (d *Delivery) ClearData(c echo.Context) error {
 }
 
 func handleUsecaseError(err error) *echo.HTTPError {
-	// Не нашли запись времени.
+	// Не нашли проект.
 	if errors.Is(err, usecaseDto.ErrProjectNotFound) {
 		return echo.NewHTTPError(
 			http.StatusNotFound,
 			fmt.Sprintf("%s: %s", response.ErrorMsgsByCode[http.StatusNotFound], "project"))
+	}
+	if errors.Is(err, usecaseDto.ErrProjectExists) {
+		return echo.NewHTTPError(http.StatusBadRequest, response.ErrorMsgsByCode[http.StatusBadRequest])
 	}
 
 	// По дефолту пятисотим.

@@ -62,6 +62,64 @@
                 }
             }
         },
+        "/goals/create": {
+            "post": {
+                "description": "Create goal.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "goals"
+                ],
+                "summary": "Create goal.",
+                "parameters": [
+                    {
+                        "description": "goal info",
+                        "name": "goal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_goal_delivery.CreateGoalIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success create goal",
+                        "schema": {
+                            "$ref": "#/definitions/internal_goal_delivery.CreateGoalOut"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "item is not found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "unprocessable entity",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/me/clear_data": {
             "delete": {
                 "description": "Clear all user data.",
@@ -77,7 +135,7 @@
                 "summary": "Clear all user data.",
                 "responses": {
                     "200": {
-                        "description": "success create project"
+                        "description": "success clear user data"
                     },
                     "500": {
                         "description": "internal server error",
@@ -271,6 +329,53 @@
                 }
             }
         },
+        "/me/projects/{project_id}/goals": {
+            "get": {
+                "description": "Get my goals for project",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "goals"
+                ],
+                "summary": "Get my goals for project.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success get goals",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_goal_delivery.GoalOut"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/projects/create": {
             "post": {
                 "description": "Create project.",
@@ -384,6 +489,76 @@
                 },
                 "time_start": {
                     "type": "string"
+                }
+            }
+        },
+        "internal_goal_delivery.CreateGoalIn": {
+            "type": "object",
+            "required": [
+                "date_end",
+                "date_start",
+                "name",
+                "project_id",
+                "time_seconds"
+            ],
+            "properties": {
+                "date_end": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "time_seconds": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_goal_delivery.CreateGoalOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_goal_delivery.GoalOut": {
+            "type": "object",
+            "properties": {
+                "date_end": {
+                    "type": "string"
+                },
+                "date_start": {
+                    "type": "string"
+                },
+                "duration_seconds": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "percent": {
+                    "type": "number"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "time_seconds": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
