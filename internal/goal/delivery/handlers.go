@@ -41,12 +41,12 @@ func RegisterHandlers(
 }
 
 // CreateGoal godoc
-// @Summary      Create goal.
-// @Description  Create goal.
+// @Summary      Создание цели.
+// @Description  Создает цель.
 // @Tags     	 goals
 // @Accept	 application/json
 // @Produce  application/json
-// @Param    goal body CreateGoalIn true "goal info"
+// @Param    goal body CreateGoalIn true "Информация о цели"
 // @Success  200 {object} CreateGoalOut "success create goal"
 // @Failure 500 {object} echo.HTTPError "internal server error"
 // @Failure 400 {object} echo.HTTPError "bad request"
@@ -97,12 +97,12 @@ func (d *Delivery) CreateGoal(c echo.Context) error {
 }
 
 // GetMyGoals godoc
-// @Summary      Get my goals for project.
-// @Description  Get my goals for project
+// @Summary      Получить все цели по проекту.
+// @Description  Получить все цели пользователя по проекту.
 // @Tags     	 goals
 // @Accept	 	application/json
 // @Produce  	application/json
-// @Param    project_id path int true "project id"
+// @Param    project_id path int true "Идентификатор проекта"
 // @Success  200 {object} []GoalOut "success get goals"
 // @Failure 500 {object} echo.HTTPError "internal server error"
 // @Failure 400 {object} echo.HTTPError "bad request"

@@ -39,18 +39,15 @@ func RegisterHandlers(
 
 	e.POST("/entries/create", handler.CreateEntry)
 	e.GET("/me/entries", handler.GetMyEntries)
-	// e.POST("/entries/edit", handler.UpdateEntry)
-	// e.GET("/entries/:id", handler.GetEntry)
-	// e.DELETE("/entries/:id", handler.DeleteEntry)
 }
 
 // CreateEntry godoc
-// @Summary      Create entry.
-// @Description  Create entry.
+// @Summary      Создание записи времени.
+// @Description  Создание записи времени.
 // @Tags     	 entries
 // @Accept	 application/json
 // @Produce  application/json
-// @Param    entry body CreateEntryIn true "entry info"
+// @Param    entry body CreateEntryIn true "Информация о записи времени"
 // @Success  200 {object} CreateEntryOut "success create entry"
 // @Failure 500 {object} echo.HTTPError "internal server error"
 // @Failure 400 {object} echo.HTTPError "bad request"
@@ -100,8 +97,8 @@ func (d *Delivery) CreateEntry(c echo.Context) error {
 }
 
 // GetMyEntries godoc
-// @Summary      Get my entries.
-// @Description  Get my entries or get my entries for a day
+// @Summary      Получить записи времени.
+// @Description  Получение всех записей времени пользователя.
 // @Tags     	 entries
 // @Accept	 	application/json
 // @Produce  	application/json

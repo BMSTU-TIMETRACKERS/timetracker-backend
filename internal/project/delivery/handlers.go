@@ -48,8 +48,8 @@ func RegisterHandlers(
 }
 
 // CreateProject godoc
-// @Summary      Create project.
-// @Description  Create project.
+// @Summary      Создать проект.
+// @Description  Создать проект.
 // @Tags     	 projects
 // @Accept	 application/json
 // @Produce  application/json
@@ -98,8 +98,8 @@ func (d *Delivery) CreateProject(c echo.Context) error {
 }
 
 // GetMyProjects godoc
-// @Summary      Get my projects.
-// @Description  Get my projects or get my projects for a day
+// @Summary      Получить список проектов.
+// @Description  Получить список проектов пользователя.
 // @Tags     	 projects
 // @Accept	 	application/json
 // @Produce  	application/json
@@ -135,8 +135,8 @@ func (d *Delivery) GetMyProjects(c echo.Context) error {
 }
 
 // GetProjectsStat godoc
-// @Summary      Get project stats.
-// @Description  Get project stats
+// @Summary      Получить статистику по проектам.
+// @Description  Получить статистику по проектам.
 // @Tags     	 projects
 // @Accept	 	application/json
 // @Produce  	application/json
@@ -186,8 +186,8 @@ func (d *Delivery) GetProjectsStat(c echo.Context) error {
 }
 
 // GetProjectStat godoc
-// @Summary      Get project entries stat.
-// @Description  Get project entries stat
+// @Summary      Получить статистику по конкретному проекту.
+// @Description  Получить статистику по конкретному проекту.
 // @Tags     	 projects
 // @Accept	 	application/json
 // @Produce  	application/json
@@ -249,8 +249,8 @@ func (d *Delivery) GetProjectStat(c echo.Context) error {
 }
 
 // ClearData godoc
-// @Summary      Clear all user data.
-// @Description  Clear all user data.
+// @Summary      Очистить все пользовательские данные.
+// @Description  Очистить все пользовательские данные.
 // @Tags     	 user
 // @Accept	 application/json
 // @Produce  application/json

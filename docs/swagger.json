@@ -1,0 +1,737 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/entries/create": {
+            "post": {
+                "description": "Создание записи времени.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "entries"
+                ],
+                "summary": "Создание записи времени.",
+                "parameters": [
+                    {
+                        "description": "Информация о записи времени",
+                        "name": "entry",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_entry_delivery.CreateEntryIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success create entry",
+                        "schema": {
+                            "$ref": "#/definitions/internal_entry_delivery.CreateEntryOut"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "item is not found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "unprocessable entity",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/goals/create": {
+            "post": {
+                "description": "Создает цель.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "goals"
+                ],
+                "summary": "Создание цели.",
+                "parameters": [
+                    {
+                        "description": "Информация о цели",
+                        "name": "goal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_goal_delivery.CreateGoalIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success create goal",
+                        "schema": {
+                            "$ref": "#/definitions/internal_goal_delivery.CreateGoalOut"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "item is not found",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "unprocessable entity",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/clear_data": {
+            "delete": {
+                "description": "Очистить все пользовательские данные.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Очистить все пользовательские данные.",
+                "responses": {
+                    "200": {
+                        "description": "success clear user data"
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/entries": {
+            "get": {
+                "description": "Получение всех записей времени пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "entries"
+                ],
+                "summary": "Получить записи времени.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "day for events in YYYY-MM-DD format",
+                        "name": "day",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success create entry",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_entry_delivery.EntryOut"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/projects": {
+            "get": {
+                "description": "Получить список проектов пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Получить список проектов.",
+                "responses": {
+                    "200": {
+                        "description": "success get projects",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_project_delivery.ProjectOut"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/projects/stat": {
+            "get": {
+                "description": "Получить статистику по проектам.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Получить статистику по проектам.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "RFC3339 format",
+                        "name": "time_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "RFC3339 format",
+                        "name": "time_end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/internal_project_delivery.ProjectsStatOut"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/projects/{id}/stat": {
+            "get": {
+                "description": "Получить статистику по конкретному проекту.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Получить статистику по конкретному проекту.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "project ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "RFC3339 format",
+                        "name": "time_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "RFC3339 format",
+                        "name": "time_end",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/internal_project_delivery.ProjectEntriesStatOut"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/projects/{project_id}/goals": {
+            "get": {
+                "description": "Получить все цели пользователя по проекту.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "goals"
+                ],
+                "summary": "Получить все цели по проекту.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Идентификатор проекта",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success get goals",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_goal_delivery.GoalOut"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/create": {
+            "post": {
+                "description": "Создать проект.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Создать проект.",
+                "parameters": [
+                    {
+                        "description": "project info",
+                        "name": "project",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_project_delivery.CreateProjectIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success create project",
+                        "schema": {
+                            "$ref": "#/definitions/internal_project_delivery.CreateProjectOut"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "422": {
+                        "description": "unprocessable entity",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/echo.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "echo.HTTPError": {
+            "type": "object",
+            "properties": {
+                "message": {}
+            }
+        },
+        "internal_entry_delivery.CreateEntryIn": {
+            "type": "object",
+            "required": [
+                "project_id",
+                "time_end",
+                "time_start"
+            ],
+            "properties": {
+                "name": {
+                    "description": "Название записи.",
+                    "type": "string",
+                    "example": "task1"
+                },
+                "project_id": {
+                    "description": "Идентификатор проекта.",
+                    "type": "integer",
+                    "example": 1
+                },
+                "time_end": {
+                    "description": "Время окончания записи.",
+                    "type": "string",
+                    "example": "2024-03-23T19:04:05Z"
+                },
+                "time_start": {
+                    "description": "Время начала записи.",
+                    "type": "string",
+                    "example": "2024-03-23T15:04:05Z"
+                }
+            }
+        },
+        "internal_entry_delivery.CreateEntryOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "Идентификатор записи.",
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "internal_entry_delivery.EntryOut": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Идентификатор записи.",
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "description": "Название записи.",
+                    "type": "string",
+                    "example": "task1"
+                },
+                "project_id": {
+                    "description": "Идентификатор проекта.",
+                    "type": "integer",
+                    "example": 1
+                },
+                "project_name": {
+                    "description": "Название проекта.",
+                    "type": "string",
+                    "example": "work"
+                },
+                "time_end": {
+                    "description": "Время окончания записи.",
+                    "type": "string",
+                    "example": "2024-03-23T19:04:05Z"
+                },
+                "time_start": {
+                    "description": "Время начала записи.",
+                    "type": "string",
+                    "example": "2024-03-23T15:04:05Z"
+                }
+            }
+        },
+        "internal_goal_delivery.CreateGoalIn": {
+            "type": "object",
+            "required": [
+                "date_end",
+                "date_start",
+                "name",
+                "project_id",
+                "time_seconds"
+            ],
+            "properties": {
+                "date_end": {
+                    "description": "Дата окончания цели.",
+                    "type": "string",
+                    "example": "2024-04-23T00:00:00Z"
+                },
+                "date_start": {
+                    "description": "Дата начала цели.",
+                    "type": "string",
+                    "example": "2024-03-23T00:00:00Z"
+                },
+                "name": {
+                    "description": "Название цели.",
+                    "type": "string",
+                    "example": "Потратить 100часов на разработку"
+                },
+                "project_id": {
+                    "description": "Идентификатор проекта.",
+                    "type": "integer",
+                    "example": 1
+                },
+                "time_seconds": {
+                    "description": "Требуемое(целевое) время в секундах.",
+                    "type": "integer",
+                    "example": 360000
+                }
+            }
+        },
+        "internal_goal_delivery.CreateGoalOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "Идентификатор цели.",
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "internal_goal_delivery.GoalOut": {
+            "type": "object",
+            "properties": {
+                "date_end": {
+                    "description": "Дата окончания цели.",
+                    "type": "string",
+                    "example": "2024-04-23T00:00:00Z"
+                },
+                "date_start": {
+                    "description": "Дата начала цели.",
+                    "type": "string",
+                    "example": "2024-03-23T00:00:00Z"
+                },
+                "duration_seconds": {
+                    "description": "Прогресс: количество секунд потреченных на эту цель",
+                    "type": "number",
+                    "example": 36000
+                },
+                "id": {
+                    "description": "Идентификатор цели.",
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "description": "Название цели.",
+                    "type": "string",
+                    "example": "Потратить 100часов на разработку"
+                },
+                "percent": {
+                    "description": "Прогресс: процент выполнения цели.",
+                    "type": "number",
+                    "example": 10
+                },
+                "project_id": {
+                    "description": "Идентификатор проекта.",
+                    "type": "integer",
+                    "example": 1
+                },
+                "time_seconds": {
+                    "description": "Требуемое(целевое) время в секундах.",
+                    "type": "integer",
+                    "example": 360000
+                },
+                "user_id": {
+                    "description": "Идентификатор пользователя.",
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "internal_project_delivery.CreateProjectIn": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "description": "Название проекта.",
+                    "type": "string",
+                    "example": "Работа"
+                }
+            }
+        },
+        "internal_project_delivery.CreateProjectOut": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "description": "Идентификатор проекта.",
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "internal_project_delivery.ProjectEntriesStat": {
+            "type": "object",
+            "properties": {
+                "duration_in_sec": {
+                    "description": "Суммарное время (в сек.) потраченное на запись.",
+                    "type": "number",
+                    "example": 360
+                },
+                "name": {
+                    "description": "Название записи.",
+                    "type": "string",
+                    "example": "task1"
+                },
+                "percent_duration": {
+                    "description": "Доля (в процентах) длительности записи от длительности проекта.",
+                    "type": "number"
+                }
+            }
+        },
+        "internal_project_delivery.ProjectEntriesStatOut": {
+            "type": "object",
+            "properties": {
+                "entries": {
+                    "description": "Записи времени.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_project_delivery.ProjectEntriesStat"
+                    }
+                },
+                "total_duration_in_sec": {
+                    "description": "Суммарное время (в сек.) потраченное на проект.",
+                    "type": "number",
+                    "example": 60
+                }
+            }
+        },
+        "internal_project_delivery.ProjectOut": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "Идентификатор проекта.                         // Идентификатор проекта.",
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "description": "Название проекта.",
+                    "type": "string",
+                    "example": "Работа"
+                }
+            }
+        },
+        "internal_project_delivery.ProjectStat": {
+            "type": "object",
+            "properties": {
+                "duration_in_sec": {
+                    "description": "Суммарное время (в сек.) потраченное на проект.",
+                    "type": "number",
+                    "example": 360
+                },
+                "id": {
+                    "description": "Идентификатор проекта.",
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "description": "Название проекта.",
+                    "type": "string",
+                    "example": "Работа"
+                },
+                "percent_duration": {
+                    "description": "Доля (в процентах) длительности проекта от суммарной длительности.",
+                    "type": "number",
+                    "example": 10
+                }
+            }
+        },
+        "internal_project_delivery.ProjectsStatOut": {
+            "type": "object",
+            "properties": {
+                "projects": {
+                    "description": "Список проектов.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/internal_project_delivery.ProjectStat"
+                    }
+                },
+                "total_duration_in_sec": {
+                    "description": "Суммарное время (в сек.) потраченное на все проекты.",
+                    "type": "number",
+                    "example": 3600
+                }
+            }
+        }
+    }
+}
