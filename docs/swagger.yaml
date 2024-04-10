@@ -1,0 +1,510 @@
+definitions:
+  echo.HTTPError:
+    properties:
+      message: {}
+    type: object
+  internal_entry_delivery.CreateEntryIn:
+    properties:
+      name:
+        description: Название записи.
+        example: task1
+        type: string
+      project_id:
+        description: Идентификатор проекта.
+        example: 1
+        type: integer
+      time_end:
+        description: Время окончания записи.
+        example: "2024-03-23T19:04:05Z"
+        type: string
+      time_start:
+        description: Время начала записи.
+        example: "2024-03-23T15:04:05Z"
+        type: string
+    required:
+    - project_id
+    - time_end
+    - time_start
+    type: object
+  internal_entry_delivery.CreateEntryOut:
+    properties:
+      id:
+        description: Идентификатор записи.
+        example: 1
+        type: integer
+    required:
+    - id
+    type: object
+  internal_entry_delivery.EntryOut:
+    properties:
+      id:
+        description: Идентификатор записи.
+        example: 1
+        type: integer
+      name:
+        description: Название записи.
+        example: task1
+        type: string
+      project_id:
+        description: Идентификатор проекта.
+        example: 1
+        type: integer
+      project_name:
+        description: Название проекта.
+        example: work
+        type: string
+      time_end:
+        description: Время окончания записи.
+        example: "2024-03-23T19:04:05Z"
+        type: string
+      time_start:
+        description: Время начала записи.
+        example: "2024-03-23T15:04:05Z"
+        type: string
+    type: object
+  internal_goal_delivery.CreateGoalIn:
+    properties:
+      date_end:
+        description: Дата окончания цели.
+        example: "2024-04-23T00:00:00Z"
+        type: string
+      date_start:
+        description: Дата начала цели.
+        example: "2024-03-23T00:00:00Z"
+        type: string
+      name:
+        description: Название цели.
+        example: Потратить 100часов на разработку
+        type: string
+      project_id:
+        description: Идентификатор проекта.
+        example: 1
+        type: integer
+      time_seconds:
+        description: Требуемое(целевое) время в секундах.
+        example: 360000
+        type: integer
+    required:
+    - date_end
+    - date_start
+    - name
+    - project_id
+    - time_seconds
+    type: object
+  internal_goal_delivery.CreateGoalOut:
+    properties:
+      id:
+        description: Идентификатор цели.
+        example: 1
+        type: integer
+    required:
+    - id
+    type: object
+  internal_goal_delivery.GoalOut:
+    properties:
+      date_end:
+        description: Дата окончания цели.
+        example: "2024-04-23T00:00:00Z"
+        type: string
+      date_start:
+        description: Дата начала цели.
+        example: "2024-03-23T00:00:00Z"
+        type: string
+      duration_seconds:
+        description: 'Прогресс: количество секунд потреченных на эту цель'
+        example: 36000
+        type: number
+      id:
+        description: Идентификатор цели.
+        example: 1
+        type: integer
+      name:
+        description: Название цели.
+        example: Потратить 100часов на разработку
+        type: string
+      percent:
+        description: 'Прогресс: процент выполнения цели.'
+        example: 10
+        type: number
+      project_id:
+        description: Идентификатор проекта.
+        example: 1
+        type: integer
+      time_seconds:
+        description: Требуемое(целевое) время в секундах.
+        example: 360000
+        type: integer
+      user_id:
+        description: Идентификатор пользователя.
+        example: 1
+        type: integer
+    type: object
+  internal_project_delivery.CreateProjectIn:
+    properties:
+      name:
+        description: Название проекта.
+        example: Работа
+        type: string
+    required:
+    - name
+    type: object
+  internal_project_delivery.CreateProjectOut:
+    properties:
+      id:
+        description: Идентификатор проекта.
+        example: 1
+        type: integer
+    required:
+    - id
+    type: object
+  internal_project_delivery.ProjectEntriesStat:
+    properties:
+      duration_in_sec:
+        description: Суммарное время (в сек.) потраченное на запись.
+        example: 360
+        type: number
+      name:
+        description: Название записи.
+        example: task1
+        type: string
+      percent_duration:
+        description: Доля (в процентах) длительности записи от длительности проекта.
+        type: number
+    type: object
+  internal_project_delivery.ProjectEntriesStatOut:
+    properties:
+      entries:
+        description: Записи времени.
+        items:
+          $ref: '#/definitions/internal_project_delivery.ProjectEntriesStat'
+        type: array
+      total_duration_in_sec:
+        description: Суммарное время (в сек.) потраченное на проект.
+        example: 60
+        type: number
+    type: object
+  internal_project_delivery.ProjectOut:
+    properties:
+      id:
+        description: Идентификатор проекта.                         // Идентификатор
+          проекта.
+        example: 1
+        type: integer
+      name:
+        description: Название проекта.
+        example: Работа
+        type: string
+    type: object
+  internal_project_delivery.ProjectStat:
+    properties:
+      duration_in_sec:
+        description: Суммарное время (в сек.) потраченное на проект.
+        example: 360
+        type: number
+      id:
+        description: Идентификатор проекта.
+        example: 1
+        type: integer
+      name:
+        description: Название проекта.
+        example: Работа
+        type: string
+      percent_duration:
+        description: Доля (в процентах) длительности проекта от суммарной длительности.
+        example: 10
+        type: number
+    type: object
+  internal_project_delivery.ProjectsStatOut:
+    properties:
+      projects:
+        description: Список проектов.
+        items:
+          $ref: '#/definitions/internal_project_delivery.ProjectStat'
+        type: array
+      total_duration_in_sec:
+        description: Суммарное время (в сек.) потраченное на все проекты.
+        example: 3600
+        type: number
+    type: object
+info:
+  contact: {}
+paths:
+  /entries/create:
+    post:
+      consumes:
+      - application/json
+      description: Создание записи времени.
+      parameters:
+      - description: Информация о записи времени
+        in: body
+        name: entry
+        required: true
+        schema:
+          $ref: '#/definitions/internal_entry_delivery.CreateEntryIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success create entry
+          schema:
+            $ref: '#/definitions/internal_entry_delivery.CreateEntryOut'
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: item is not found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "422":
+          description: unprocessable entity
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Создание записи времени.
+      tags:
+      - entries
+  /goals/create:
+    post:
+      consumes:
+      - application/json
+      description: Создает цель.
+      parameters:
+      - description: Информация о цели
+        in: body
+        name: goal
+        required: true
+        schema:
+          $ref: '#/definitions/internal_goal_delivery.CreateGoalIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success create goal
+          schema:
+            $ref: '#/definitions/internal_goal_delivery.CreateGoalOut'
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "404":
+          description: item is not found
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "422":
+          description: unprocessable entity
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Создание цели.
+      tags:
+      - goals
+  /me/clear_data:
+    delete:
+      consumes:
+      - application/json
+      description: Очистить все пользовательские данные.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success clear user data
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Очистить все пользовательские данные.
+      tags:
+      - user
+  /me/entries:
+    get:
+      consumes:
+      - application/json
+      description: Получение всех записей времени пользователя.
+      parameters:
+      - description: day for events in YYYY-MM-DD format
+        in: query
+        name: day
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success create entry
+          schema:
+            items:
+              $ref: '#/definitions/internal_entry_delivery.EntryOut'
+            type: array
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Получить записи времени.
+      tags:
+      - entries
+  /me/projects:
+    get:
+      consumes:
+      - application/json
+      description: Получить список проектов пользователя.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success get projects
+          schema:
+            items:
+              $ref: '#/definitions/internal_project_delivery.ProjectOut'
+            type: array
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Получить список проектов.
+      tags:
+      - projects
+  /me/projects/{id}/stat:
+    get:
+      consumes:
+      - application/json
+      description: Получить статистику по конкретному проекту.
+      parameters:
+      - description: project ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: RFC3339 format
+        in: query
+        name: time_start
+        type: string
+      - description: RFC3339 format
+        in: query
+        name: time_end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/internal_project_delivery.ProjectEntriesStatOut'
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Получить статистику по конкретному проекту.
+      tags:
+      - projects
+  /me/projects/{project_id}/goals:
+    get:
+      consumes:
+      - application/json
+      description: Получить все цели пользователя по проекту.
+      parameters:
+      - description: Идентификатор проекта
+        in: path
+        name: project_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success get goals
+          schema:
+            items:
+              $ref: '#/definitions/internal_goal_delivery.GoalOut'
+            type: array
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Получить все цели по проекту.
+      tags:
+      - goals
+  /me/projects/stat:
+    get:
+      consumes:
+      - application/json
+      description: Получить статистику по проектам.
+      parameters:
+      - description: RFC3339 format
+        in: query
+        name: time_start
+        type: string
+      - description: RFC3339 format
+        in: query
+        name: time_end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/internal_project_delivery.ProjectsStatOut'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Получить статистику по проектам.
+      tags:
+      - projects
+  /projects/create:
+    post:
+      consumes:
+      - application/json
+      description: Создать проект.
+      parameters:
+      - description: project info
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/internal_project_delivery.CreateProjectIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success create project
+          schema:
+            $ref: '#/definitions/internal_project_delivery.CreateProjectOut'
+        "400":
+          description: bad request
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "422":
+          description: unprocessable entity
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/echo.HTTPError'
+      summary: Создать проект.
+      tags:
+      - projects
+swagger: "2.0"
